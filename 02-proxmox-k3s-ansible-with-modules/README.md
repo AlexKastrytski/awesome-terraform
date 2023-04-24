@@ -31,7 +31,7 @@ sudo pacman -S ipcalc --no-confirm
 and `terraform-repl` and `tfrepl` from https://github.com/paololazzari/terraform-repl
 and https://github.com/andreineculau/tfrepl
 
-## A quick walk-though the architecture of the configuration
+## A quick overview of the configuration architecture
 ### k3s-ansible Ansible playbook
 (https://github.com/techno-tim/k3s-ansible)
 is an Ansible playbook for installing k3s cluster on already provisioned
@@ -142,6 +142,8 @@ We could
   place is to demonstrate how local modules can reference each other.
 - Create VM templates via https://github.com/pvelati/ansible-role-proxmox-kvm-mgmt
 instead of using https://github.com/Alliedium/awesome-proxmox/tree/main/vm-cloud-init-shell
+- Generate SSH key automatically either via https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key
+  or via `local-exec`, see https://developer.hashicorp.com/terraform/language/resources/provisioners/local-exec
 - Extract kubeconfig  via https://registry.terraform.io/providers/tenstad/remote/latest/docs/data-sources/file
 or via Ansible
 - Wrap k3s-ansible Ansible playbook with our own Ansible playbook that
@@ -154,6 +156,28 @@ and https://developer.hashicorp.com/terraform/language/resources/provisioners/re
   see https://developer.hashicorp.com/terraform/language/settings/backends/configuration
 - We could check that we can connect to the k3s cluster via the wrapper
   Ansible playbook
+- The path to Ansible inventory we create at
+  `./external/k3s-ansible/inventory/terraform` doesn't include the name
+  of current workspace which means the inventory and group variables
+  files will be overwritten every time we apply Terraform configuration
+  in a newly selected workspace. This can be easily fixed though by
+  making the path to inventory dependent on the name of the current
+  workspace.
+- The file with variable values `my.tfvars` (and
+  `variables.tfvars.example` for that matter) contains both sensitive
+  and non-sensitive data. Ideally, sensitive data should be kept
+  separately and managed in a different way (see
+  https://blog.gruntwork.io/a-comprehensive-guide-to-managing-secrets-in-your-terraform-code-1d586955ace1).
+- All that time we assumed that we run Terraform by hand (via
+  `terraform` CLI) which is not always the best way to do it. Sometimes,
+  for large environments with developed CI/CD pipelines it would make
+  sense to implement GitOps approach where changes to Terraform
+  configurations are committed to Git repository monitored by some kind
+  of automation system that picks up the changes and automatically
+  applies Terraform configuration to the environment (with an optional
+  stage of approval by human). Moreover, the changes can be applied to
+  testing environment first, then to staging environments and finally -
+  to production.
 
 ## References
 
