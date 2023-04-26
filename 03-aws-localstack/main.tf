@@ -53,7 +53,7 @@ resource "aws_dynamodb_table" "terraform_lock" {
     }
 }
 
-resource "aws_s3_bucket" "main_bucket" {
-  bucket = "main-bucket"
-}
+#resource "aws_s3_bucket" "main_bucket" {
+# bucket = "main-bucket"
+#}
 
