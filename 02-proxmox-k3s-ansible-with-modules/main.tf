@@ -8,14 +8,17 @@ terraform {
 }
 
 provider "proxmox" {
-  pm_tls_insecure = true
-  pm_api_url      = local.wparams.pve_api_url
-  pm_api_token_id = local.wsensparams.pm_api_token_id
-  pm_api_token_secret = local.wsensparams.pm_api_token_secret
-  pm_otp          = ""
-  pm_log_enable   = true
-  pm_log_file     = "terraform-plugin-proxmox.log"
-  pm_debug        = true
+  #pve_api_url=https://192.168.0.101:8006/api2/json
+  #PM_API_TOKEN_SECRET='1d8bc3c9-d610-4fbf-b125-8bf48efa74bb'
+  #pm_api_token_id     = terraform-prov@pve!new
+  pm_tls_insecure     = true
+  pm_api_url          = local.wparams.pve_api_url
+  #pm_api_token_id     = local.wsensparams.pm_api_token_id
+  #pm_api_token_secret = local.wsensparams.pm_api_token_secret
+  pm_otp              = ""
+  pm_log_enable       = true
+  pm_log_file         = "terraform-plugin-proxmox.log"
+  pm_debug            = true
   pm_log_levels = {
     _default    = "debug"
     _capturelog = ""
@@ -24,7 +27,7 @@ provider "proxmox" {
 }
 
 module "deepmerge_wparams" {
-  source  = "Invicton-Labs/deepmerge/null"
+  source = "Invicton-Labs/deepmerge/null"
   maps = [
     module.remove_nulls_wparams_def.removed,
     module.remove_nulls_wparams.removed
@@ -32,7 +35,7 @@ module "deepmerge_wparams" {
 }
 
 module "deepmerge_wsensparams" {
-  source  = "Invicton-Labs/deepmerge/null"
+  source = "Invicton-Labs/deepmerge/null"
   maps = [
     module.remove_nulls_wsensparams_def.removed,
     module.remove_nulls_wsensparams.removed
@@ -58,18 +61,18 @@ module "remove_nulls_wsensparams" {
 }
 
 module "remove_nulls_wparams_def" {
-  source = "./modules/wparam-remove-nulls"
+  source            = "./modules/wparam-remove-nulls"
   object_with_nulls = var.workspace_default_params
 }
 
 module "remove_nulls_wsensparams_def" {
-  source = "./modules/wparam-remove-nulls"
+  source            = "./modules/wparam-remove-nulls"
   object_with_nulls = var.workspace_sensitive_default_params
 }
 
 locals {
 
-  wparams = module.deepmerge_wparams.merged
+  wparams     = module.deepmerge_wparams.merged
   wsensparams = module.deepmerge_wsensparams.merged
 
   master_name_spec  = local.wparams.vm.master_name_spec
@@ -175,7 +178,7 @@ data "local_file" "vm_ci_ssh_pub_key" {
 }
 
 output "wsensparams" {
-  value = local.wsensparams
+  value     = local.wsensparams
   sensitive = true
 }
 
@@ -258,15 +261,15 @@ resource "local_file" "k3s_ansible_group_vars_all" {
   filename = "external/k3s-ansible/inventory/terraform/group_vars/all.yml"
 }
 resource "null_resource" "example" {
-provisioner "remote-exec" {
-connection {
-  host = "192.168.0.14"
-  user = local.wsensparams.vm.ci_user
-  private_key = file("~/.ssh/id_pve_tf_k3s_ed25519")
-}
-inline = ["echo 'connected!'"]
-}
-provisioner "local-exec" {
-command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./external/k3s-ansible/site.yml -i ./external/k3s-ansible/inventory/terraform"
-}
+  provisioner "remote-exec" {
+    connection {
+      host        = "192.168.0.111"
+      user        = local.wsensparams.vm.ci_user
+      private_key = file("/home/capo/.ssh/id_rsa_prox")
+    }
+    inline = ["echo 'connected!'"]
+  }
+  provisioner "local-exec" {
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./external/k3s-ansible/site.yml -i ./external/k3s-ansible/inventory/terraform"
+  }
 }
