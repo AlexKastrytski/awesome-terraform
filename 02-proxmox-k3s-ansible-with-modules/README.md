@@ -3,6 +3,7 @@ This example assumes you
 - cloned this repository with git submodules:
 ```
 git clone https://github.com/Alliedium/awesome-terraform.git
+cd ./awesome-terraform
 git submodule init
 git submodule update
 cd ./02-proxmox-k3s-ansible-with-modules
@@ -27,15 +28,15 @@ and environment.
 
 - Install `ipcalc` via 
 ```
-sudo pacman -S ipcalc --no-confirm
+sudo pacman -S ipcalc --noconfirm
 ```
 and `terraform-repl` and `tfrepl` from https://github.com/paololazzari/terraform-repl
 and https://github.com/andreineculau/tfrepl
 
 - Install `ansible` and `python-netaddr` packages
 ```
-sudo pacman -S ansible --no-confirm
-sudo pacman -S python-netaddr --no-confirm
+sudo pacman -S ansible --noconfirm
+sudo pacman -S python-netaddr --noconfirm
 ```
 
 ## A quick overview of the configuration architecture
