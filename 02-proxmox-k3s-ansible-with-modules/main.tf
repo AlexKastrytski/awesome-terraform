@@ -11,14 +11,14 @@ provider "proxmox" {
   #pve_api_url=https://192.168.0.101:8006/api2/json
   #PM_API_TOKEN_SECRET='1d8bc3c9-d610-4fbf-b125-8bf48efa74bb'
   #pm_api_token_id     = terraform-prov@pve!new
-  pm_tls_insecure     = true
-  pm_api_url          = local.wparams.pve_api_url
+  pm_tls_insecure = true
+  pm_api_url      = local.wparams.pve_api_url
   #pm_api_token_id     = local.wsensparams.pm_api_token_id
   #pm_api_token_secret = local.wsensparams.pm_api_token_secret
-  pm_otp              = ""
-  pm_log_enable       = true
-  pm_log_file         = "terraform-plugin-proxmox.log"
-  pm_debug            = true
+  pm_otp        = ""
+  pm_log_enable = true
+  pm_log_file   = "terraform-plugin-proxmox.log"
+  pm_debug      = true
   pm_log_levels = {
     _default    = "debug"
     _capturelog = ""
@@ -260,16 +260,17 @@ resource "local_file" "k3s_ansible_group_vars_all" {
   )
   filename = "external/k3s-ansible/inventory/terraform/group_vars/all.yml"
 }
-resource "null_resource" "example" {
-  provisioner "remote-exec" {
-    connection {
-      host        = "192.168.0.111"
-      user        = local.wsensparams.vm.ci_user
-      private_key = file("/home/capo/.ssh/id_rsa_prox")
-    }
-    inline = ["echo 'connected!'"]
-  }
-  provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./external/k3s-ansible/site.yml -i ./external/k3s-ansible/inventory/terraform"
-  }
-}
+
+# resource "null_resource" "example" {
+#   provisioner "remote-exec" {
+#     connection {
+#       host        = "192.168.0.111"
+#       user        = local.wsensparams.vm.ci_user
+#       private_key = file("/home/capo/.ssh/id_rsa_prox")
+#     }
+#     inline = ["echo 'connected!'"]
+#   }
+#   provisioner "local-exec" {
+#     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./external/k3s-ansible/site.yml -i ./external/k3s-ansible/inventory/terraform"
+#   }
+# }

@@ -123,7 +123,7 @@ resource "proxmox_vm_qemu" "vm" {
     storage  = var.disk_storage
     iothread = 1
     discard  = "on"
-    format   = "qcow2"
+    format   = "raw"
   }
 
   # Setup the network interface and assign a vlan tag: 256

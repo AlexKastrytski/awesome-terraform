@@ -8,7 +8,7 @@ workspace_params = {
       start_ip       = "192.168.0.111/24"
       pool           = "nods"
       bridge         = "vmbr0"
-      disk_size      = "15G"
+      disk_size      = "10G"
       disk_storage   = "big2T"
     }
   }
@@ -17,12 +17,12 @@ workspace_params = {
       master_name_spec = "k8s-master-tf-prod-%d"
       agent_name_spec = "k8s-agent-tf-prod-%d"
       n_masters      = 3
-      n_agents       = 1
-      start_ip       = "192.168.0.112/20"
+      n_agents       = 2
+      start_ip       = "192.168.0.112/24"
       pool           = "nods"
       cpu            = "host"
       cores          = 4
-      memory         = 4096
+      memory         = 2096
       bridge         = "vmbr0"
       nameserver     = "192.168.0.1"
       gateway        = "192.168.0.1"
@@ -49,7 +49,7 @@ workspace_default_params = {
     gateway        = "192.168.0.1"
     disk_size      = "4G"
     disk_storage   = "big2T"
-    target_nodes   = ["vpe", "vpe", "vpe" ,"vpe", "vpe"]
+    target_nodes   = ["pve", "pve", "pve" ]
   },
   pve_api_url = "https://192.168.0.101:8006/api2/json"
 }
@@ -57,21 +57,21 @@ workspace_default_params = {
 workspace_sensitive_params = {
   default = {
     vm = {
-      ci_user = "suser-def"
-      ci_password = "superpw-def"
+      ci_user = "capo"
+      ci_password = "1"
     },
     metal_lb_ip_range = "192.168.0.50-192.168.0.70" 
     apiserver_endpoint = "192.168.0.50" 
   }
   production = {
     vm = {
-      ci_user = "suser-prod"
-      ci_password = "superpw-prod"
+      ci_user = "capo"
+      ci_password = "1"
     },
     pm_api_token_id = "your-proxmox-token-id"
     pm_api_token_secret = "your-proxmox-token-secret"
-    metal_lb_ip_range = "10.109.1.71-10.109.1.90" 
-    apiserver_endpoint = "10.109.1.30" 
+    metal_lb_ip_range = "192.168.0.111-192.168.0.115" 
+    apiserver_endpoint = "192.168.0.111" 
     k3s_token = "prod-c1k7nhfy26lg5way91eaas2npn5"
   }
 }
@@ -85,7 +85,7 @@ workspace_sensitive_default_params = {
   }
   pm_api_token_id = "your-proxmox-token-id"
   pm_api_token_secret = "your-proxmox-token-secret"
-  metal_lb_ip_range = "192.168.0.50 - 192.168.0.70"
-  apiserver_endpoint = "192.168.0.50"
+  metal_lb_ip_range = "192.168.0.111 - 192.168.0.116"
+  apiserver_endpoint = "192.168.0.111"
   k3s_token = "default-c1k7nhfy26lg5way91eaas2npn5"
 }
